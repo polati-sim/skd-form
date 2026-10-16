@@ -51,12 +51,13 @@ button,input,textarea,select{font:inherit;color:inherit}
 .strip-wrap .wrap{padding:0}
 .strip{display:flex;align-items:flex-end;gap:4px;overflow-x:auto;padding:0 14px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .strip::-webkit-scrollbar{display:none}
-.st{flex:none;display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:128px;max-width:220px;padding:8px 14px 9px;border:1px solid var(--tab2);border-bottom:0;border-radius:12px 12px 0 0;background:var(--tab);color:var(--ink2);cursor:pointer;text-align:left;position:relative}
+.st{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:pan-x;flex:none;display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:128px;max-width:220px;padding:8px 14px 9px;border:1px solid var(--tab2);border-bottom:0;border-radius:12px 12px 0 0;background:var(--tab);color:var(--ink2);cursor:pointer;text-align:left;position:relative}
 .st b{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;max-width:100%;display:flex;align-items:center;gap:7px}
 .st b span.t{overflow:hidden;text-overflow:ellipsis}
 .st small{font-size:12px;color:#4A4A4A;font-weight:700;white-space:nowrap}
 .st.on{background:#fff;border-color:var(--line);padding-top:12px;z-index:2;margin-bottom:-1px}
 .st.on small{color:var(--muted)}
+.st.drag{z-index:3;transform:translateY(-4px) scale(1.04);box-shadow:0 8px 18px rgba(0,0,0,.22);transition:transform .12s}
 .nowc{flex:none;min-width:22px;height:22px;border-radius:11px;background:var(--ink);color:#fff;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;padding:0 6px}
 .dot2{width:10px;height:10px;border-radius:50%;background:#9C9C9C;flex:none}
 .dot2.pass{background:var(--teal)}
@@ -229,6 +230,17 @@ button,input,textarea,select{font:inherit;color:inherit}
 .status::before{content:"";width:10px;height:10px;border-radius:50%;background:#9C9C9C;flex:none}
 .status.pass{color:#9FF0D8}.status.pass::before{background:#53EABF}
 .status.fail{color:#FFB487}.status.fail::before{background:var(--orange)}
+@media(max-width:600px){
+  body{padding-bottom:24px}
+  .bar-fix{position:static;box-shadow:none;padding:6px 14px 8px}
+  .bar-fix .in{gap:6px 10px}
+  .bar-fix .who{flex:none;display:flex;align-items:baseline;gap:8px}
+  .bar-fix .t{max-width:40vw;font-size:13px}
+  .bar-fix .v{font-size:17px;white-space:nowrap}
+  .bar-fix .jump{order:2;flex:1 1 100%}
+  .bar-fix .jump button{height:32px;padding:0 11px;font-size:13px}
+  .status{order:1;font-size:13px}
+}
 @media(min-width:760px){
   .bar-fix .jump{order:1;flex:1 1 auto;justify-content:center}
   .status{order:2}
@@ -319,8 +331,14 @@ textarea{width:100%;min-height:84px;border:1.5px solid var(--line);border-radius
       </div>
     </div>
   </div>
+  <div class="bar-fix">
+    <div class="in">
+      <div class="who"><div class="t" id="barName">Слушатель</div><div class="v"><span id="barTotal">0</span> <small>из 34</small></div></div>
+      <nav class="jump" id="jump" aria-label="Разделы бланка"></nav>
+      <div class="status" id="barPill">Заполнено 0 из 17</div>
+    </div>
+  </div>
 </div>
-
 <main class="wrap">
 
   <section class="card">
@@ -387,13 +405,6 @@ textarea{width:100%;min-height:84px;border:1.5px solid var(--line);border-radius
   </section>
 </main>
 
-<div class="bar-fix">
-  <div class="in">
-    <div class="who"><div class="t" id="barName">Слушатель</div><div class="v"><span id="barTotal">0</span> <small>из 34</small></div></div>
-    <nav class="jump" id="jump" aria-label="Разделы бланка"></nav>
-    <div class="status" id="barPill">Заполнено 0 из 17</div>
-  </div>
-</div>
 
 <div id="pdfSheet" aria-hidden="true"></div>
 
@@ -844,6 +855,7 @@ $('list').addEventListener('input',function(ev){
 $('sign0').addEventListener('change',function(){S().sign[0]=this.checked;save();});
 $('sign1').addEventListener('change',function(){S().sign[1]=this.checked;save();});
 $('strip').addEventListener('click',function(ev){
+  if(justDragged){ev.preventDefault();return;}
   var b=ev.target.closest('.st');
   if(b){switchTo(b.dataset.id);return;}
   if(ev.target.closest('#addSt')){
@@ -851,6 +863,46 @@ $('strip').addEventListener('click',function(ev){
     window.scrollTo(0,0);$('fio').focus();
   }
 });
+
+/* ===== перетаскивание вкладок: удержать палец (или зажать мышь) и вести вбок ===== */
+var drag=null,justDragged=false;
+function dragStart(el,x,y){
+  drag={el:el,x:x,y:y,on:false,timer:setTimeout(function(){if(drag){drag.on=true;el.classList.add('drag');if(navigator.vibrate)navigator.vibrate(25);}},320)};
+}
+function dragMove(x,y,ev){
+  if(!drag)return;
+  if(!drag.on){
+    if(Math.abs(x-drag.x)>8||Math.abs(y-drag.y)>8){clearTimeout(drag.timer);drag=null;}
+    return;
+  }
+  if(ev&&ev.cancelable)ev.preventDefault();
+  var strip=$('strip'),r=strip.getBoundingClientRect();
+  if(x<r.left+40)strip.scrollLeft-=12;else if(x>r.right-40)strip.scrollLeft+=12;
+  var over=document.elementFromPoint(x,y),t=over&&over.closest&&over.closest('.st');
+  if(!t||t===drag.el||t.parentNode!==strip)return;
+  var tr=t.getBoundingClientRect();
+  if(x<tr.left+tr.width/2)strip.insertBefore(drag.el,t);else t.after(drag.el);
+}
+function dragEnd(){
+  if(!drag)return;
+  clearTimeout(drag.timer);
+  if(drag.on){
+    drag.el.classList.remove('drag');
+    var order=Array.prototype.map.call($('strip').querySelectorAll('.st'),function(b){return b.dataset.id;});
+    DB.list.sort(function(a,b){return order.indexOf(a.id)-order.indexOf(b.id);});
+    save();renderStrip();
+    justDragged=true;setTimeout(function(){justDragged=false;},350);
+  }
+  drag=null;
+}
+$('strip').addEventListener('touchstart',function(ev){var b=ev.target.closest('.st');if(b&&ev.touches.length===1)dragStart(b,ev.touches[0].clientX,ev.touches[0].clientY);},{passive:true});
+$('strip').addEventListener('touchmove',function(ev){if(drag)dragMove(ev.touches[0].clientX,ev.touches[0].clientY,ev);},{passive:false});
+$('strip').addEventListener('touchend',dragEnd);
+$('strip').addEventListener('touchcancel',dragEnd);
+$('strip').addEventListener('mousedown',function(ev){var b=ev.target.closest('.st');if(b&&ev.button===0)dragStart(b,ev.clientX,ev.clientY);});
+document.addEventListener('mousemove',function(ev){if(drag)dragMove(ev.clientX,ev.clientY,ev);});
+document.addEventListener('mouseup',dragEnd);
+$('strip').addEventListener('contextmenu',function(ev){if(ev.target.closest('.st'))ev.preventDefault();});
 
 /* ===== диалог ошибок ===== */
 var cur=null;
@@ -1065,7 +1117,7 @@ $('wipe').addEventListener('click',function(){
 
 /* ===== отправка в Google Таблицу ===== */
 /* >>> ВСТАВЬТЕ СЮДА адрес веб-приложения (заканчивается на /exec) и секретное слово из скрипта <<< */
-var SHEET_URL='https://script.google.com/macros/s/AKfycbwx__EgdwfeEPD_LX8PZ4OEeWx7F7nr02Mg-Knz4Q4YExfIf2dMwXOlJ509iCSNmOYv/exec';
+var SHEET_URL='https://script.google.com/macros/s/AKfycbxH_9Fwk5MEWMZ1qyqeoBrkPMPSwRI94yEdAqxrwLEo5fcmh-vfux6Hh2c8KROacTK-/exec';
 var SHEET_TOKEN='uc';
 function cfgGet(){return {url:SHEET_URL,token:SHEET_TOKEN};}
 function urlOk(u){return typeof u==='string'&&/^https:\/\/script\.google\.com\//.test(u.trim());}
