@@ -366,7 +366,7 @@ textarea{width:100%;min-height:84px;border:1.5px solid var(--line);border-radius
     </div>
   </section>
 
-  <div class="lockbar" id="lockBar"><div><b id="lockBarT">Заполнение заблокировано</b><span id="lockBarS">Два нуля в упражнениях, кроме узлов.</span></div><button type="button" class="btn sm" id="lockFix">Изменить или подтвердить</button></div>
+  <div class="lockbar" id="lockBar"><div><b id="lockBarT">Заполнение заблокировано</b><span id="lockBarS">Три нуля в упражнениях, кроме узлов.</span></div><button type="button" class="btn sm" id="lockFix">Изменить или подтвердить</button></div>
 
   <div id="list"></div>
 
@@ -416,7 +416,7 @@ textarea{width:100%;min-height:84px;border:1.5px solid var(--line);border-radius
 
 <dialog id="lockDlg" aria-labelledby="lockTitle">
   <div class="db">
-    <div class="warnbox"><b id="lockTitle">Заполнение заблокировано</b><span>У слушателя два нуля в упражнениях, кроме узлов.</span></div>
+    <div class="warnbox"><b id="lockTitle">Заполнение заблокировано</b><span>У слушателя три нуля в упражнениях, кроме узлов.</span></div>
     <p class="lq">Эти упражнения с нулём вы можете изменить:</p>
     <div id="lockList"></div>
   </div>
@@ -698,7 +698,8 @@ function setSel(id,v){
 }
 var wasLocked=false;
 function zeros(st){var z=0;EX.forEach(function(e){if(e.b!==2&&st.rows[e.n].score===0)z++;});return z;}
-function lockedNow(st){return zeros(st)>=2;}
+var ZERO_LIMIT=3; /* сколько нулей (кроме узлов) останавливают экзамен */
+function lockedNow(st){return zeros(st)>=ZERO_LIMIT;}
 var editN=null;
 function applyLock(){
   var st=S(),locked=lockedNow(st);
@@ -712,7 +713,7 @@ function applyLock(){
   if(locked){
     var cf=!!st.confirmed;
     $('lockBarT').textContent=cf?'Результат подтверждён':'Заполнение заблокировано';
-    $('lockBarS').textContent=cf?'Экзамен остановлен: два нуля в упражнениях, кроме узлов.':'Два нуля в упражнениях, кроме узлов.';
+    $('lockBarS').textContent=cf?'Экзамен остановлен: три нуля в упражнениях, кроме узлов.':'Три нуля в упражнениях, кроме узлов.';
     $('lockFix').textContent=cf?'Изменить':'Изменить или подтвердить';
   }
 }
@@ -756,7 +757,7 @@ function scrollStrip(){
 /* ===== итоги ===== */
 function summary(){
   var st=S();
-  if(zeros(st)<2&&st.confirmed)st.confirmed=false;
+  if(zeros(st)<ZERO_LIMIT&&st.confirmed)st.confirmed=false;
   var c=calc(st),done=c.done,total=c.total,bs=c.bs;
   var idx=DB.list.indexOf(st),nm=shortName(st,idx);
   $('barTotal').textContent=total;
@@ -794,7 +795,7 @@ function summary(){
   }
   if(lockedNow(st)){
     v.className='verdict fail';
-    v.innerHTML=st.confirmed?'Результат подтверждён<small>Экзамен остановлен: два нуля в упражнениях, кроме узлов.</small>':'Заполнение заблокировано<small>У слушателя два нуля в упражнениях, кроме узлов. Итог не рассчитан.</small>';
+    v.innerHTML=st.confirmed?'Результат подтверждён<small>Экзамен остановлен: три нуля в упражнениях, кроме узлов.</small>':'Заполнение заблокировано<small>У слушателя три нуля в упражнениях, кроме узлов. Итог не рассчитан.</small>';
     pill.className='status fail';pill.textContent=st.confirmed?'Подтверждён':'Заблокирован';
   }
   renderJump(st);renderStrip();renderNow();showSent();applyLock();
@@ -992,7 +993,7 @@ function loadScript(src){return new Promise(function(ok,no){var s=document.creat
 function ruDate(d){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(d||'');return m?m[3]+'.'+m[2]+'.'+m[1]:'';}
 function verdictOf(st){
   var c=calc(st),bs=c.bs;
-  if(lockedNow(st))return {cls:'fail',t:st.confirmed?'Экзамен остановлен, результат подтверждён':'Экзамен остановлен',s:'Два нуля в упражнениях, кроме узлов.'};
+  if(lockedNow(st))return {cls:'fail',t:st.confirmed?'Экзамен остановлен, результат подтверждён':'Экзамен остановлен',s:'Три нуля в упражнениях, кроме узлов.'};
   if(c.done<17)return {cls:'',t:'Заполнено упражнений: '+c.done+' из 17',s:'Итог рассчитывается, когда выставлены все оценки.'};
   if(c.ok)return {cls:'pass',t:'Практическая часть сдана',s:'Набрано '+c.total+' из 34, минимум по каждому блоку выполнен.'};
   var why=[];
@@ -1117,7 +1118,7 @@ $('wipe').addEventListener('click',function(){
 
 /* ===== отправка в Google Таблицу ===== */
 /* >>> ВСТАВЬТЕ СЮДА адрес веб-приложения (заканчивается на /exec) и секретное слово из скрипта <<< */
-var SHEET_URL='https://script.google.com/macros/s/AKfycbxH_9Fwk5MEWMZ1qyqeoBrkPMPSwRI94yEdAqxrwLEo5fcmh-vfux6Hh2c8KROacTK-/exec';
+var SHEET_URL='https://script.google.com/macros/s/AKfycbyxgnCboUp6EMrOrgysVjVrgJ6FnWaDiFKFQqE0uLXaLacb6OIrGQ2JIHm5B_jYabIY/exec';
 var SHEET_TOKEN='uc';
 function cfgGet(){return {url:SHEET_URL,token:SHEET_TOKEN};}
 function urlOk(u){return typeof u==='string'&&/^https:\/\/script\.google\.com\//.test(u.trim());}
@@ -1136,7 +1137,7 @@ function showSent(){
 function safeCell(v){return (typeof v==='string'&&/^[=+\-@]/.test(v))?"'"+v:v;}
 function resultText(st){
   var c=calc(st);
-  return lockedNow(st)?(st.confirmed?'остановлен: 2 нуля, подтверждён':'остановлен: 2 нуля'):(c.done<17?'не заполнено':(c.ok?'сдан':'не сдан'));
+  return lockedNow(st)?(st.confirmed?'остановлен: 3 нуля, подтверждён':'остановлен: 3 нуля'):(c.done<17?'не заполнено':(c.ok?'сдан':'не сдан'));
 }
 function buildPayload(st){
   return {student:{
