@@ -15,7 +15,7 @@
   --amber:#E9A020;--amber-bg:#FDF3DC;
   --paper:#F0F0EE;--card:#fff;--line:#E0E0E0;--muted:#6B6B6B;
   --tab:#D9D9D9;--tab2:#C4C4C4;
-  --s0:#B3B3B3;--s1:#86ACBF;--s2:#00A99D;
+  --s0:#9C9C9C;--s1:#93AEC9;--s2:#009A93;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -102,6 +102,12 @@ button,input,textarea,select{font:inherit;color:inherit}
 .photo input{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
 .rm-photo{margin-top:6px;background:none;border:0;color:var(--orange-d);font-size:12px;font-weight:700;padding:4px 0;cursor:pointer;display:none}
 .rm-photo.show{display:block}
+.fiorow{display:flex;gap:8px}
+.fiorow input{flex:1;min-width:0}
+.fiorow .btn{flex:none;width:auto;min-width:0;padding:0 14px;height:46px}
+.grpadd{margin-top:8px;width:100%;height:42px;border-radius:10px;border:1.5px dashed #93AEC9;background:#fff;color:var(--ink);font-weight:800;cursor:pointer}
+.grpadd:hover{background:#F2F5F8}
+.pick .tag{margin-left:auto;font-size:12px;font-weight:700;color:var(--muted)}
 .gal{margin-top:6px;background:none;border:0;color:var(--teal-d);font-size:12px;font-weight:700;padding:4px 0;cursor:pointer;display:block;text-align:left}
 .fields{display:grid;grid-template-columns:1fr;gap:10px}
 .f label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:0 0 4px}
@@ -145,10 +151,10 @@ button,input,textarea,select{font:inherit;color:inherit}
   #list .sec{grid-column:1/-1}
 }
 .ex-ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
-.time{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);font-weight:600}
+.time{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);font-weight:600;margin-left:auto}
 .time input{width:70px;height:46px;border:1.5px solid var(--line);border-radius:10px;text-align:center;font-size:17px;font-weight:700;background:#fff;-moz-appearance:textfield}
 .time input::-webkit-outer-spin-button,.time input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-.score{display:flex;gap:6px;margin-left:auto}
+.score{display:flex;gap:6px}
 .score button{width:52px;height:46px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font-weight:800;font-size:18px;cursor:pointer}
 .score button:focus-visible,.more:focus-visible,.hint button:focus-visible,.btn:focus-visible{outline:3px solid rgba(23,112,94,.35);outline-offset:2px}
 .score button[data-s="0"].on{background:var(--s0);border-color:var(--s0);color:var(--ink)}
@@ -160,11 +166,36 @@ button,input,textarea,select{font:inherit;color:inherit}
 .hint button{flex:none;border:0;background:var(--ink);color:#fff;border-radius:8px;padding:8px 12px;font-weight:700;font-size:13px;cursor:pointer;min-height:36px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .chip{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600}
-.chip.g{background:var(--orange-bg);color:var(--orange-d)}
-.chip.r{background:var(--amber-bg);color:#8A5A00}
-.chip.n{background:#EEF0EE;color:var(--ink2)}
-.more{margin-top:10px;width:100%;height:44px;border-radius:10px;border:1.5px dashed #B9C2BD;background:#FAFBFA;color:var(--teal-d);font-weight:700;cursor:pointer}
-.more.has{border-style:solid;border-color:var(--teal);background:var(--mint)}
+.chip.g{background:#FF6700;color:#fff}
+.chip.r{background:#93AEC9;color:#2A2A2A}
+.chip.n{background:#E0E0E0;color:var(--ink2)}
+/* подтверждение оценки галочкой */
+.okbtn{flex:none;width:46px;height:46px;border-radius:50%;border:1.5px solid var(--tab2);background:#fff;padding:0;cursor:pointer;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.okbtn svg{display:block;width:100%;height:100%;pointer-events:none}
+.okbtn .tick{fill:none;stroke:#9C9C9C;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.okbtn .ring{fill:none;stroke:var(--orange);stroke-width:3.5;stroke-dasharray:126;stroke-dashoffset:126;transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset .15s}
+.okbtn.hold .ring{stroke-dashoffset:0;transition:stroke-dashoffset 1s linear}
+.okbtn.on{background:var(--ink);border-color:var(--ink)}
+.ex{position:relative}
+.unlk{position:absolute;left:0;right:0;top:0;height:34px;border-radius:14px 14px 0 0;background:var(--ink);color:#fff;font-size:13px;font-weight:800;display:none;align-items:center;justify-content:center;overflow:hidden;z-index:3}
+.unlk i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--orange)}
+.unlk span{position:relative}
+.ex.hold .unlk{display:flex}
+.ex.hold.go .unlk i{width:100%;transition:width 1s linear}
+.okbtn.on .tick{stroke:#fff}
+.okbtn:disabled{opacity:.35;cursor:not-allowed}
+.okhint{display:none;font-size:12px;color:var(--muted);font-weight:600;margin-top:8px}
+.ex.ok .okhint{display:block;color:#555}
+.ex.ok{background:#D6D6D4;border-color:#C4C4C2;border-left-color:#8E8E8C;box-shadow:none}
+.ex.ok .ex-title{color:#555}
+.ex.ok .num{background:#9C9C9C}
+.ex.ok .score button:not(.on),.ex.ok .time input,.ex.ok .more,.ex.ok .nowbtn{opacity:.45;background:#E8E8E6}
+.ex.ok .score button.on{opacity:.8}
+.tnote{display:none;font-size:12px;font-weight:700;margin-top:8px;border-radius:8px;padding:6px 10px}
+.tnote.show{display:block}
+.tnote.y{background:#B8C6CF;color:#2A2A2A}.tnote.r{background:#FF6700;color:#fff}
+.more{margin-top:10px;display:block;width:auto;max-width:100%;padding:0 18px;height:44px;border-radius:10px;border:1.5px dashed #93AEC9;background:#fff;color:var(--ink);font-weight:700;cursor:pointer}
+.more.has{border-style:solid;border-color:#93AEC9;background:#B8C6CF}
 
 /* summary card */
 .sumrow{margin-top:12px}
@@ -173,6 +204,11 @@ button,input,textarea,select{font:inherit;color:inherit}
 .bar{height:10px;border-radius:99px;background:#E9ECE8;margin-top:6px;position:relative;overflow:hidden}
 .bar i{display:block;height:100%;background:var(--teal);border-radius:99px;transition:width .2s}
 .bar i.low{background:var(--orange)}
+.sumrow.pen .l span:last-child{color:#FF6700}
+.pdots{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px}
+.pgrp{display:flex;gap:5px}
+.pd{width:14px;height:14px;border-radius:50%;border:2px solid #FF6700;background:#fff}
+.pd.on{background:#FF6700}
 .sumrow .m{font-size:12px;color:var(--muted);margin-top:3px}
 .verdict{margin-top:16px;border-radius:12px;padding:12px 14px;font-weight:700}
 .verdict.wait{background:#EEF0EE}
@@ -248,7 +284,7 @@ button,input,textarea,select{font:inherit;color:inherit}
 
 /* dialog */
 dialog{padding:0;border:0;border-radius:20px;width:min(580px,calc(100% - 24px));max-height:90vh;background:#fff;color:var(--ink)}
-dialog[open]{display:flex;flex-direction:column}
+dialog[open]{display:flex;flex-direction:column;overflow:hidden}
 dialog::backdrop{background:rgba(30,37,40,.55)}
 @media(max-width:600px){
   dialog{width:100%;max-width:100%;margin:auto 0 0;border-radius:20px 20px 0 0;max-height:92vh}
@@ -256,14 +292,20 @@ dialog::backdrop{background:rgba(30,37,40,.55)}
 .dh{padding:16px 16px 10px;border-bottom:1px solid var(--line)}
 .dh b{display:block;font-size:16px;line-height:1.3}
 .dh span{font-size:12px;color:var(--muted)}
-.db{padding:6px 16px 14px;overflow:auto;-webkit-overflow-scrolling:touch}
+.db{padding:6px 16px 14px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto;min-height:0}
+.catbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0 4px}
+.cat{display:flex;align-items:center;gap:10px;min-height:52px;padding:6px 12px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-weight:800;font-size:14px;text-align:left;cursor:pointer;color:var(--ink)}
+.cat .cn{flex:none;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;background:#EEE}
+.cat.g .cn{background:#FF6700;color:#fff}.cat.r .cn{background:#93AEC9;color:#2A2A2A}
+.cat.g.on{border-color:#FF6700;box-shadow:inset 0 0 0 1.5px #FF6700}.cat.r.on{border-color:#93AEC9;box-shadow:inset 0 0 0 1.5px #93AEC9}
+.cathint{font-size:12px;color:var(--muted);margin:8px 0 4px}
 .db h3{font-size:14px;margin:16px 0 6px;font-weight:800;display:flex;align-items:center;gap:8px}
 .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
 .opt{display:flex;gap:10px;align-items:flex-start;padding:10px 8px;border-radius:10px;font-size:14px;cursor:pointer;line-height:1.35}
 .opt:hover{background:#F6F7F5}
 .opt input{flex:none;width:22px;height:22px;margin-top:0;accent-color:var(--teal)}
-.opt.g input{accent-color:var(--orange)}
-.opt.r input{accent-color:var(--amber)}
+.opt.g input{accent-color:#FF6700}
+.opt.r input{accent-color:#93AEC9}
 textarea{width:100%;min-height:84px;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;resize:vertical;background:#fff}
 .df{padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
 .df .btn{width:100%;flex:none}
@@ -357,11 +399,11 @@ textarea{width:100%;min-height:84px;border:1.5px solid var(--line);border-radius
         <button type="button" class="rm-photo" id="rmPhoto">Убрать фото</button>
       </div>
       <div class="fields">
-        <div class="f wide"><label for="fio">ФИО слушателя</label><input id="fio" type="text" placeholder="Фамилия Имя" autocomplete="off"></div>
+        <div class="f wide"><label for="fio">ФИО слушателя</label><div class="fiorow"><input id="fio" type="text" placeholder="Фамилия Имя" autocomplete="off" list="fioList"><button type="button" class="btn sm" id="pickFio" hidden>Из группы</button></div><datalist id="fioList"></datalist></div>
         <div class="f"><label for="city">Город</label><select id="city"></select></div>
         <div class="f"><label for="date">Дата экзамена</label><input id="date" type="date"></div>
         <div class="f"><label for="instr">Инструктор группы</label><select id="instr"></select></div>
-        <div class="f"><label for="exam">Экзаменатор</label><select id="exam"></select></div>
+        <div class="f"><label for="exam">Экзаменатор</label><select id="exam"></select><button type="button" class="grpadd" id="addGroup" hidden>+ Добавить всю группу</button></div>
       </div>
     </div>
   </section>
@@ -414,10 +456,16 @@ textarea{width:100%;min-height:84px;border:1.5px solid var(--line);border-radius
   <div class="df"><button type="button" class="btn pri" id="dlgClose">Готово</button></div>
 </dialog>
 
+<dialog id="grpDlg" aria-labelledby="grpTitle">
+  <div class="dh"><b id="grpTitle">Группа экзаменатора</b><span id="grpSub"></span></div>
+  <div class="db" id="grpBody"></div>
+  <div class="df"><button type="button" class="btn" id="grpClose">Закрыть</button></div>
+</dialog>
+
 <dialog id="lockDlg" aria-labelledby="lockTitle">
   <div class="db">
-    <div class="warnbox"><b id="lockTitle">Заполнение заблокировано</b><span>У слушателя три нуля в упражнениях, кроме узлов.</span></div>
-    <p class="lq">Эти упражнения с нулём вы можете изменить:</p>
+    <div class="warnbox"><b id="lockTitle">Заполнение заблокировано</b><span id="lockWhy">Три нуля в упражнениях, кроме узлов.</span></div>
+    <p class="lq" id="lockQ">Эти упражнения с нулём вы можете изменить:</p>
     <div id="lockList"></div>
   </div>
   <div class="df dfs"><button type="button" class="btn" id="lockOk">Закрыть</button><button type="button" class="btn pri" id="lockConfirm">Результат подтверждён</button></div>
@@ -458,7 +506,7 @@ var G_COMMON=[
   {id:'g_siz',t:'Привязь не застёгнута или неверно надета, нет каски или упала каска'},
   {id:'g_thread',t:'СИЗ и снаряжение заправлены неверно'},
   {id:'g_drop',t:'Упало металлическое снаряжение (зажим, блок-ролик, карабин)'},
-  {id:'g_time',t:'Не уложился во время: больше 25 минут'},
+  {id:'g_time',t:'Время больше 25 минут'},
   {id:'g_slack',t:'Чрезмерное провисание страховки, фактор падения больше 2'},
   {id:'g_clamp',t:'Неверное управление страховочным зажимом, зажал зажим рукой'},
   {id:'g_three',t:'Три замечания = оценка «0»'},
@@ -473,7 +521,7 @@ var R_COMMON=[
   {id:'r_descender',t:'Спусковое не заблокировано, нет контроля скорости спуска'},
   {id:'r_siz',t:'СИЗ настроены неверно, нет перчаток'},
   {id:'r_textile',t:'Упало текстильное СИЗ или снаряжение (педаль, петля)'},
-  {id:'r_time',t:'Не уложился во время: больше 20 минут'},
+  {id:'r_time',t:'Время от 20 до 25 минут'},
   {id:'r_rescue',t:'Спас. работы: нет карабина для трения, сильная натяжка точки «ВС»'},
   {id:'r_break',t:'Карабин нагружен на излом (без поломки)'},
   {id:'r_slack',t:'Большое провисание верёвки между зажимами'},
@@ -509,7 +557,7 @@ function pad(x){return String(x).padStart(2,'0');}
 function today(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
 function hhmm(){var d=new Date();return pad(d.getHours())+':'+pad(d.getMinutes());}
 function uid(){return 's'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
-function blankRows(){var r={};EX.forEach(function(e){r[e.n]={time:'',score:null,auto:false,g:[],r:[],note:''};});return r;}
+function blankRows(){var r={};EX.forEach(function(e){r[e.n]={time:'',score:null,auto:false,ok:false,g:[],r:[],note:''};});return r;}
 function newStudent(from){
   return {id:uid(),fio:'',code:'',sent:'',unlocked:false,confirmed:false,city:from?from.city:'',date:from?from.date:today(),instr:from?from.instr:'',exam:from?from.exam:'',photo:'',rows:blankRows(),sign:[false,false],now:[]};
 }
@@ -533,6 +581,7 @@ function normStudent(s){
       time:t,
       score:(r.score===0||r.score===1||r.score===2)?r.score:null,
       auto:!!r.auto,
+      ok:!!r.ok&&(r.score===0||r.score===1||r.score===2),
       g:(Array.isArray(r.g)?r.g:[]).filter(function(id){return LABEL[id]&&id.charAt(0)==='g';}),
       r:(Array.isArray(r.r)?r.r:[]).filter(function(id){return LABEL[id]&&id.charAt(0)==='r';}),
       note:typeof r.note==='string'?r.note.slice(0,1000):''
@@ -565,10 +614,14 @@ window.addEventListener('pagehide',function(){if(saveTimer)flush();});
 document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden'&&saveTimer)flush();});
 
 /* ===== расчёт ===== */
+/* каждые 3 своих комментария инструктора (в любых упражнениях) — минус 1 балл от общей суммы */
+var NOTES_PER_POINT=3;
+function notesCount(st){var n=0;EX.forEach(function(e){if(st.rows[e.n].note.trim())n++;});return n;}
 function calc(st){
-  var done=0,total=0,bs={1:0,2:0,3:0};
-  EX.forEach(function(e){var s=st.rows[e.n].score;if(s!==null){done++;total+=s;bs[e.b]+=s;}});
-  return {done:done,total:total,bs:bs,ok:done===17&&total>=23&&bs[1]>=15&&bs[2]>=6&&bs[3]>=2};
+  var done=0,raw=0,bs={1:0,2:0,3:0};
+  EX.forEach(function(e){var s=st.rows[e.n].score;if(s!==null){done++;raw+=s;bs[e.b]+=s;}});
+  var notes=notesCount(st),pen=Math.floor(notes/NOTES_PER_POINT),total=Math.max(0,raw-pen);
+  return {done:done,raw:raw,notes:notes,pen:pen,total:total,bs:bs,ok:done===17&&total>=23&&bs[1]>=15&&bs[2]>=6&&bs[3]>=2};
 }
 function shortName(s,i){
   var p=(s.fio||'').trim().split(/\s+/).filter(Boolean);
@@ -585,16 +638,20 @@ function build(){
       h+='<div class="ex" data-n="'+e.n+'" data-s="">'+
         '<div class="ex-top"><span class="num">'+e.n+'</span><div class="ex-title">'+e.t+'</div><button type="button" class="nowbtn" aria-pressed="false">Сейчас</button></div>'+
         '<div class="ex-ctrl">'+
-          (e.time?'<label class="time">Время <input type="number" inputmode="numeric" min="0" max="99" step="1" placeholder="0" aria-label="Время выполнения, минут"> мин</label>':'')+
           '<div class="score" role="group" aria-label="Оценка">'+
             '<button type="button" data-s="0" aria-label="Оценка 0">0</button>'+
             '<button type="button" data-s="1" aria-label="Оценка 1">1</button>'+
             '<button type="button" data-s="2" aria-label="Оценка 2">2</button>'+
           '</div>'+
+          '<button type="button" class="okbtn" aria-label="Подтвердить оценку"><svg viewBox="0 0 46 46"><circle class="ring" cx="23" cy="23" r="20"/><path class="tick" d="M14 23.5l6 6 12-13"/></svg></button>'+
+          (e.time?'<label class="time">Время <input type="number" inputmode="numeric" min="0" max="99" step="1" placeholder="0" aria-label="Время выполнения, минут"> мин</label>':'')+
         '</div>'+
+        '<div class="tnote"></div>'+
+        '<div class="okhint">Оценка подтверждена. Чтобы изменить, удерживайте галочку.</div>'+
+        '<div class="unlk" aria-hidden="true"><i></i><span>Удерживайте — разблокировка</span></div>'+
         '<div class="hint"><span></span><button type="button">Отметить</button></div>'+
         '<div class="chips"></div>'+
-        '<button type="button" class="more">+ Ошибки и замечания</button>'+
+        '<button type="button" class="more">+ Ошибки и комментарии</button>'+
       '</div>';
     });
   });
@@ -605,6 +662,7 @@ function build(){
 function upd(n,skipSum){
   var r=S().rows[n],c=document.querySelector('.ex[data-n="'+n+'"]');
   c.dataset.s=r.score===null?'':r.score;
+  if(r.ok&&S().now.indexOf(n)>=0)S().now=S().now.filter(function(x){return x!==n;});
   var isNow=S().now.indexOf(n)>=0,nb=c.querySelector('.nowbtn');
   c.classList.toggle('now',isNow);nb.classList.toggle('on',isNow);nb.setAttribute('aria-pressed',isNow?'true':'false');
   nb.textContent=isNow?'Выполняет':'Сейчас';
@@ -617,15 +675,51 @@ function upd(n,skipSum){
   var cnt=r.g.length+r.r.length+(r.note.trim()?1:0);
   var more=c.querySelector('.more');
   more.classList.toggle('has',cnt>0);
-  more.textContent=cnt>0?'Ошибки и замечания: '+cnt:'+ Ошибки и замечания';
-  var hint=c.querySelector('.hint'),t=parseInt(r.time,10),show=false;
-  if(exOf(n).time&&!isNaN(t)){
-    if(t>25&&r.g.indexOf('g_time')<0){hint.className='hint red show';hint.firstChild.textContent='Больше 25 минут: по правилам это грубая ошибка.';hint.dataset.add='g_time';show=true;}
-    else if(t>20&&t<=25&&r.score!==0&&r.r.indexOf('r_time')<0&&r.g.indexOf('g_time')<0){hint.className='hint show';hint.firstChild.textContent='Больше 20 минут: по правилам это замечание.';hint.dataset.add='r_time';show=true;}
-  }
-  if(!show){hint.className='hint';}
+  more.textContent=cnt>0?'Ошибки и комментарии: '+cnt:'+ Ошибки и комментарии';
+  c.classList.toggle('ok',!!r.ok);
+  var ob=c.querySelector('.okbtn');ob.classList.toggle('on',!!r.ok);
+  ob.setAttribute('aria-label',r.ok?'Оценка подтверждена. Удерживайте, чтобы изменить':'Подтвердить оценку');
+  var tn=c.querySelector('.tnote'),cat=timeCat(n,r.time);
+  if(cat===1){tn.className='tnote show y';tn.textContent='Время '+r.time+' мин: по правилам оценка 1.';}
+  else if(cat===2){tn.className='tnote show r';tn.textContent='Время '+r.time+' мин: по правилам оценка 0.';}
+  else tn.className='tnote';
   if(!skipSum)summary();
 }
+/* время: до 19 мин — оценка на выбор инструктора; 20–25 мин — оценка 1; 26 мин и больше — оценка 0 */
+function timeCat(n,time){
+  if(!exOf(n).time)return 0;
+  var t=parseInt(time,10);
+  if(isNaN(t))return 0;
+  return t>=26?2:(t>=20?1:0);
+}
+function applyTimeRule(n,cat){
+  var r=S().rows[n];
+  var dropT=function(){r.g=r.g.filter(function(x){return x!=='g_time';});r.r=r.r.filter(function(x){return x!=='r_time';});};
+  if(cat===1){setScore(n,1);r.auto=true;dropT();r.r.push('r_time');}
+  else if(cat===2){setScore(n,0);r.auto=true;dropT();r.g.push('g_time');}
+  else{dropT();if(r.auto){r.score=null;r.auto=false;}}
+}
+/* галочка: короткое нажатие подтверждает оценку; снять подтверждение — удерживать 1 секунду */
+var okHold=null,okJustUnlocked=false;
+function okHoldStop(){if(okHold){clearTimeout(okHold.t);okHold.b.classList.remove('hold');okHold.c.classList.remove('hold','go');okHold=null;}}
+$('list').addEventListener('pointerdown',function(ev){
+  var b=ev.target.closest('.okbtn');if(!b||b.disabled)return;
+  var n=+b.closest('.ex').dataset.n,r=S().rows[n];
+  if(!r.ok)return;
+  ev.preventDefault();
+  okHoldStop();
+  b.classList.add('hold');
+  var card=b.closest('.ex');card.classList.add('hold');
+  requestAnimationFrame(function(){requestAnimationFrame(function(){if(okHold&&okHold.c===card)card.classList.add('go');});});
+  okHold={b:b,c:card,t:setTimeout(function(){
+    okHoldStop();r.ok=false;if(navigator.vibrate)navigator.vibrate(30);
+    okJustUnlocked=true;setTimeout(function(){okJustUnlocked=false;},500);
+    upd(n);save();
+  },1000)};
+});
+['pointerup','pointercancel'].forEach(function(t){document.addEventListener(t,okHoldStop);});
+$('list').addEventListener('contextmenu',function(ev){if(ev.target.closest('.okbtn'))ev.preventDefault();});
+
 /* оценка задаётся кнопкой; список ошибок относится только к выбранной оценке */
 function setScore(n,v){
   var r=S().rows[n];
@@ -639,7 +733,7 @@ function setScore(n,v){
 /* ===== блокировка и переходы ===== */
 /* ===== справочники: ведутся в таблице, лист «Справочники» ===== */
 var STAFF=['Юрий Удовиченко','Кирилл Проурзин','Кирилл Кеда','Дмитрий Зудилов'];
-var LISTS_DEF={cities:['Мытищи','Благовещенск'],instructors:STAFF,examiners:STAFF};
+var LISTS_DEF={cities:['Мытищи','Благовещенск'],instructors:STAFF,examiners:STAFF,groups:{}};
 var LISTS_KEY='polati-exam-lists';
 function listsGet(){try{var l=JSON.parse(localStorage.getItem(LISTS_KEY));if(l&&Array.isArray(l.cities))return l;}catch(e){}return LISTS_DEF;}
 function cleanList(a,def){var out=[];(Array.isArray(a)?a:[]).forEach(function(x){x=String(x||'').trim().slice(0,120);if(x&&out.indexOf(x)<0)out.push(x);});return out.length?out:def;}
@@ -648,12 +742,59 @@ function applyLists(l){
     $(p[0]).innerHTML='<option value="">Выберите</option>'+l[p[1]].map(function(n){return '<option>'+esc(n)+'</option>';}).join('');
     setSel(p[0],S()[p[0]]);
   });
+  updGroup();
 }
+/* ===== группа экзаменатора: список людей из листа «Группы» ===== */
+function groupOf(name){var g=(listsGet().groups||{})[normName(name)];return Array.isArray(g)?g:[];}
+function fioKey(x){return normName(x).toLowerCase().replace(/ё/g,'е');}
+function updGroup(){
+  var g=groupOf(S().exam);
+  $('fioList').innerHTML=g.map(function(n){return '<option value="'+esc(n)+'">';}).join('');
+  $('pickFio').hidden=!g.length;
+  $('addGroup').hidden=!g.length;
+  $('addGroup').textContent='+ Добавить всю группу ('+g.length+')';
+}
+function openGroup(){
+  var g=groupOf(S().exam),have={};
+  DB.list.forEach(function(s){if(s.fio.trim())have[fioKey(s.fio)]=s.id;});
+  $('grpSub').textContent=S().exam+': '+g.length+' чел.';
+  $('grpBody').innerHTML=g.map(function(n){
+    var id=have[fioKey(n)];
+    return '<button type="button" class="pick" data-fio="'+esc(n)+'"'+(id?' data-id="'+esc(id)+'"':'')+'>'+esc(n)+(id?'<span class="tag">'+(id===DB.cur?'открыт':'есть вкладка')+'</span>':'')+'</button>';
+  }).join('')||'<p>В группе пока никого нет.</p>';
+  $('grpDlg').showModal();
+}
+$('pickFio').addEventListener('click',openGroup);
+$('grpClose').addEventListener('click',function(){$('grpDlg').close();});
+$('grpBody').addEventListener('click',function(ev){
+  var b=ev.target.closest('.pick');if(!b)return;
+  $('grpDlg').close();
+  if(b.dataset.id){switchTo(b.dataset.id);return;}
+  S().fio=b.dataset.fio;$('fio').value=S().fio;summary();save();
+});
+$('addGroup').addEventListener('click',function(){
+  var g=groupOf(S().exam);if(!g.length)return;
+  var have={};DB.list.forEach(function(s){if(s.fio.trim())have[fioKey(s.fio)]=1;});
+  var add=g.filter(function(n){return !have[fioKey(n)];});
+  if(!add.length){alert('Все люди из группы уже добавлены.');return;}
+  if(!confirm('Добавить вкладки на '+add.length+' чел. из группы «'+S().exam+'»?'))return;
+  var base=S(),cur0=S(),first=null;
+  add.forEach(function(n,i){
+    if(i===0&&!cur0.fio.trim()&&calc(cur0).done===0){cur0.fio=n;first=cur0.id;return;}
+    var ns=newStudent(base);ns.fio=n;DB.list.push(ns);if(!first)first=ns.id;
+  });
+  DB.cur=first;save();load();window.scrollTo(0,0);
+});
 function fetchLists(){
   if(!urlOk(SHEET_URL))return;
   fetch(SHEET_URL+'?action=lists&token='+encodeURIComponent(SHEET_TOKEN)).then(function(r){return r.json();}).then(function(j){
     if(!j||!j.ok||!j.lists)return;
-    var l={cities:cleanList(j.lists.cities,LISTS_DEF.cities),instructors:cleanList(j.lists.instructors,LISTS_DEF.instructors),examiners:cleanList(j.lists.examiners,LISTS_DEF.examiners)};
+    var gr={};
+    if(j.lists.groups&&typeof j.lists.groups==='object')Object.keys(j.lists.groups).slice(0,200).forEach(function(k){
+      var key=normName(k).slice(0,120),arr=cleanList(j.lists.groups[k],[]).slice(0,500);
+      if(key&&arr.length)gr[key]=arr;
+    });
+    var l={cities:cleanList(j.lists.cities,LISTS_DEF.cities),instructors:cleanList(j.lists.instructors,LISTS_DEF.instructors),examiners:cleanList(j.lists.examiners,LISTS_DEF.examiners),groups:gr};
     try{localStorage.setItem(LISTS_KEY,JSON.stringify(l));}catch(e){}
     applyLists(l);
   }).catch(function(){});
@@ -699,35 +840,56 @@ function setSel(id,v){
 var wasLocked=false;
 function zeros(st){var z=0;EX.forEach(function(e){if(e.b!==2&&st.rows[e.n].score===0)z++;});return z;}
 var ZERO_LIMIT=3; /* сколько нулей (кроме узлов) останавливают экзамен */
-function lockedNow(st){return zeros(st)>=ZERO_LIMIT;}
+var POWER_MIN=15; /* минимум за силовые: если набрать его уже нельзя, узлы и навески закрываются */
+function powerFail(st){
+  var sum=0,left=0;
+  EX.forEach(function(e){if(e.b!==1)return;var s=st.rows[e.n].score;if(s===null)left++;else sum+=s;});
+  return sum+2*left<POWER_MIN;
+}
+/* причина остановки: 'zeros' — три нуля, 'power' — силовые меньше 15; пусто — всё в порядке */
+function lockedNow(st){return zeros(st)>=ZERO_LIMIT?'zeros':(powerFail(st)?'power':'');}
+var LOCK_TXT={
+  zeros:{s:'Три нуля в упражнениях, кроме узлов.',res:'остановлен: 3 нуля',q:'Эти упражнения с нулём вы можете изменить:'},
+  power:{s:'Силовые упражнения меньше 15 баллов. По правилам к узлам и навескам не допускается.',res:'остановлен: силовые меньше 15',q:'Силовые упражнения, где можно изменить оценку:'}
+};
 var editN=null;
 function applyLock(){
-  var st=S(),locked=lockedNow(st);
-  if(!locked)editN=null;
+  var st=S(),why=lockedNow(st);
+  if(!why)editN=null;
   document.querySelectorAll('.ex').forEach(function(c){
-    var n=+c.dataset.n,off=locked&&n!==editN;
+    var n=+c.dataset.n,e=exOf(n),r=st.rows[n];
+    var off=!!why&&n!==editN&&(why==='zeros'||e.b!==1);
     c.classList.toggle('locked',off);
-    c.querySelectorAll('button,input').forEach(function(x){x.disabled=off;});
+    c.querySelectorAll('button,input').forEach(function(x){
+      var isOk=x.classList.contains('okbtn');
+      x.disabled=off||(isOk?r.score===null:!!r.ok);
+    });
   });
-  $('lockBar').classList.toggle('show',locked);
-  if(locked){
+  $('lockBar').classList.toggle('show',!!why);
+  if(why){
     var cf=!!st.confirmed;
-    $('lockBarT').textContent=cf?'Результат подтверждён':'Заполнение заблокировано';
-    $('lockBarS').textContent=cf?'Экзамен остановлен: три нуля в упражнениях, кроме узлов.':'Три нуля в упражнениях, кроме узлов.';
+    $('lockBarT').textContent=cf?'Результат подтверждён':(why==='power'?'Узлы и навески закрыты':'Заполнение заблокировано');
+    $('lockBarS').textContent=(cf?'Экзамен остановлен. ':'')+LOCK_TXT[why].s;
     $('lockFix').textContent=cf?'Изменить':'Изменить или подтвердить';
   }
 }
 function openLockDlg(){
-  var st=S(),h='';
+  var st=S(),why=lockedNow(st),h='';
+  if(!why)return;
   EX.forEach(function(e){
-    if(e.b!==2&&st.rows[e.n].score===0)h+='<button type="button" class="pick" data-n="'+e.n+'"><span class="num">'+e.n+'</span>'+esc(e.t)+'</button>';
+    var sc=st.rows[e.n].score;
+    var hit=why==='zeros'?(e.b!==2&&sc===0):(e.b===1&&sc!==null&&sc<2);
+    if(hit)h+='<button type="button" class="pick" data-n="'+e.n+'"><span class="num">'+e.n+'</span>'+esc(e.t)+'</button>';
   });
+  $('lockTitle').textContent=why==='power'?'Узлы и навески закрыты':'Заполнение заблокировано';
+  $('lockWhy').textContent=LOCK_TXT[why].s;
+  $('lockQ').textContent=LOCK_TXT[why].q;
   $('lockList').innerHTML=h;
   if(!$('lockDlg').open)$('lockDlg').showModal();
 }
 function checkLock(){
   var l=lockedNow(S());
-  if(l&&!wasLocked)openLockDlg();
+  if(l&&l!==wasLocked)openLockDlg();
   wasLocked=l;
 }
 function renderJump(st){
@@ -757,7 +919,7 @@ function scrollStrip(){
 /* ===== итоги ===== */
 function summary(){
   var st=S();
-  if(zeros(st)<ZERO_LIMIT&&st.confirmed)st.confirmed=false;
+  if(!lockedNow(st)&&st.confirmed)st.confirmed=false;
   var c=calc(st),done=c.done,total=c.total,bs=c.bs;
   var idx=DB.list.indexOf(st),nm=shortName(st,idx);
   $('barTotal').textContent=total;
@@ -773,7 +935,18 @@ function summary(){
       '<div class="bar"><i class="'+(rated===all&&bs[b.id]<b.min?'low':'')+'" style="width:'+(bs[b.id]/b.max*100)+'%"></i></div>'+
       '<div class="m">Минимум для сдачи: '+b.min+'</div></div>';
   });
-  rowsH+='<div class="sumrow"><div class="l"><span>Всего за экзамен</span><span>'+total+' / 34</span></div>'+
+  var groups=Math.floor(c.notes/NOTES_PER_POINT)+1,dots='';
+  for(var gi=0;gi<groups;gi++){
+    dots+='<span class="pgrp" title="'+NOTES_PER_POINT+' комментария = −1 балл">';
+    for(var di=0;di<NOTES_PER_POINT;di++)dots+='<span class="pd'+(gi*NOTES_PER_POINT+di<c.notes?' on':'')+'"></span>';
+    dots+='</span>';
+  }
+  {
+    rowsH+='<div class="sumrow pen"><div class="l"><span>Комментарии инструктора: '+c.notes+'</span><span>'+(c.pen?'−'+c.pen:'0')+'</span></div>'+
+      '<div class="pdots">'+dots+'</div>'+
+      '<div class="m">Каждые '+NOTES_PER_POINT+' комментария — минус 1 балл от общей суммы.'+(c.pen?' Сумма без штрафа: '+c.raw+'.':' До штрафа осталось: '+(NOTES_PER_POINT-c.notes%NOTES_PER_POINT)+'.')+'</div></div>';
+  }
+  rowsH+='<div class="sumrow"><div class="l"><span>Всего за экзамен'+(c.pen?' (со штрафом −'+c.pen+')':'')+'</span><span>'+total+' / 34</span></div>'+
     '<div class="bar"><i class="'+(done===17&&total<23?'low':'')+'" style="width:'+(total/34*100)+'%"></i></div>'+
     '<div class="m">Минимум для сдачи практической части: 23</div></div>';
   $('sumRows').innerHTML=rowsH;
@@ -793,9 +966,10 @@ function summary(){
     v.className='verdict fail';v.innerHTML='Практическая часть не сдана<small>'+why.join('; ')+'.</small>';
     pill.className='status fail';pill.textContent='Не сдан';
   }
-  if(lockedNow(st)){
+  var why0=lockedNow(st);
+  if(why0){
     v.className='verdict fail';
-    v.innerHTML=st.confirmed?'Результат подтверждён<small>Экзамен остановлен: три нуля в упражнениях, кроме узлов.</small>':'Заполнение заблокировано<small>У слушателя три нуля в упражнениях, кроме узлов. Итог не рассчитан.</small>';
+    v.innerHTML=(st.confirmed?'Результат подтверждён':'Экзамен остановлен')+'<small>'+LOCK_TXT[why0].s+(st.confirmed?'':' Итог не рассчитан.')+'</small>';
     pill.className='status fail';pill.textContent=st.confirmed?'Подтверждён':'Заблокирован';
   }
   renderJump(st);renderStrip();renderNow();showSent();applyLock();
@@ -808,7 +982,7 @@ function setPhoto(src){
 }
 function load(){
   var s=S();
-  $('fio').value=s.fio;setSel('city',s.city);$('date').value=s.date;setSel('instr',s.instr);setSel('exam',s.exam);
+  $('fio').value=s.fio;setSel('city',s.city);$('date').value=s.date;setSel('instr',s.instr);setSel('exam',s.exam);updGroup();
   $('sign0').checked=s.sign[0];$('sign1').checked=s.sign[1];
   setPhoto(s.photo);
   document.querySelectorAll('.ex').forEach(function(c){
@@ -829,8 +1003,19 @@ $('list').addEventListener('click',function(ev){
   var c=ev.target.closest('.ex');if(!c)return;
   var n=+c.dataset.n,r=S().rows[n];
   if(ev.target.closest('.nowbtn')){toggleNow(n);return;}
+  var ob=ev.target.closest('.okbtn');
+  if(ob){
+    if(okJustUnlocked||r.ok||r.score===null)return;
+    r.ok=true;S().now=S().now.filter(function(x){return x!==n;});
+    upd(n);renderNow();renderStrip();save();return;
+  }
   var sb=ev.target.closest('.score button');
-  if(sb){var s=+sb.dataset.s;if(r.score===s)r.score=null;else setScore(n,s);upd(n);save();checkLock();return;}
+  if(sb){
+    var s=+sb.dataset.s,cat=timeCat(n,r.time),need=cat===1?1:(cat===2?0:null);
+    if(r.score===s){r.score=null;r.auto=false;upd(n);save();checkLock();return;}
+    if(need!==null&&s!==need&&!confirm('По времени ('+r.time+' мин) по правилам положена оценка '+need+'. Всё равно поставить '+s+'?'))return;
+    setScore(n,s);upd(n);save();checkLock();return;
+  }
   if(ev.target.closest('.more')){openDlg(n);return;}
   var hb=ev.target.closest('.hint button');
   if(hb){
@@ -844,14 +1029,17 @@ $('list').addEventListener('click',function(ev){
 $('list').addEventListener('input',function(ev){
   if(ev.target.matches('.time input')){
     var n=+ev.target.closest('.ex').dataset.n;
-    S().rows[n].time=ev.target.value.replace(/\D/g,'').slice(0,2);
-    upd(n);save();
+    var r=S().rows[n],was=timeCat(n,r.time);
+    r.time=ev.target.value.replace(/\D/g,'').slice(0,2);
+    var cat=timeCat(n,r.time);
+    if(cat!==was)applyTimeRule(n,cat);
+    upd(n);save();checkLock();
   }
 });
 
 /* ===== события: шапка ===== */
 [['fio','fio'],['city','city'],['date','date'],['instr','instr'],['exam','exam']].forEach(function(p){
-  $(p[0]).addEventListener('input',function(){S()[p[1]]=this.value;if(p[1]==='fio'||p[1]==='city'||p[1]==='instr')summary();save();});
+  $(p[0]).addEventListener('input',function(){S()[p[1]]=this.value;if(p[1]==='exam')updGroup();if(p[1]==='fio'||p[1]==='city'||p[1]==='instr')summary();save();});
 });
 $('sign0').addEventListener('change',function(){S().sign[0]=this.checked;save();});
 $('sign1').addEventListener('change',function(){S().sign[1]=this.checked;save();});
@@ -912,38 +1100,46 @@ function optHTML(list,kind,arr){
     return '<label class="opt '+kind+'"><input type="checkbox" data-id="'+o.id+'"'+(arr.indexOf(o.id)>=0?' checked':'')+'><span>'+o.t+'</span></label>';
   }).join('');
 }
+var dlgCat=null; /* какой список открыт в окне: 'g' — грубые ошибки, 'r' — замечания */
 function renderDlg(){
-  var n=cur,e=exOf(n),r=S().rows[n],h='',sub='';
+  var n=cur,e=exOf(n),r=S().rows[n],h='';
   var g=e.knot?G_KNOT:G_COMMON,rm=e.knot?R_KNOT:R_COMMON;
-  if(r.score===0){sub='Оценка 0: грубые ошибки';h+=optHTML(g,'g',r.g);}
-  else if(r.score===1){sub='Оценка 1: замечания';h+=optHTML(rm,'r',r.r);}
-  else if(r.score===2){sub='Оценка 2: нарушений нет';}
-  else{
-    sub='Оценка не выставлена';
-    h+='<p style="font-weight:700;margin:14px 0 10px">Выберите оценку</p>'+
-       '<button type="button" class="pick sp" data-s="0"><span class="num">0</span>Грубые ошибки</button>'+
-       '<button type="button" class="pick sp" data-s="1"><span class="num">1</span>Замечания</button>';
-  }
-  if(r.score!==null)h+='<h3>Свой комментарий</h3><textarea id="note" placeholder="Что именно произошло и на каком этапе">'+esc(r.note)+'</textarea>';
+  var sub=r.score===null?'Оценка не выставлена':'Оценка '+r.score;
+  h+='<h3>Свой комментарий</h3><textarea id="note" placeholder="Напишите своими словами: что произошло и на каком этапе">'+esc(r.note)+'</textarea>'+
+     '<p style="font-size:12px;color:var(--muted);margin:6px 0 0">Каждые '+NOTES_PER_POINT+' своих комментария по слушателю — минус 1 балл от общей суммы.</p>';
+  h+='<div class="catbar">'+
+     '<button type="button" class="cat g'+(dlgCat==='g'?' on':'')+'" data-cat="g"><span class="cn">0</span><span class="ct">Грубые ошибки'+(r.g.length?' · '+r.g.length:'')+'</span></button>'+
+     '<button type="button" class="cat r'+(dlgCat==='r'?' on':'')+'" data-cat="r"><span class="cn">1</span><span class="ct">Замечания'+(r.r.length?' · '+r.r.length:'')+'</span></button>'+
+     '</div>';
+  if(dlgCat==='g')h+='<p class="cathint">Отметьте ошибку — поставится оценка 0.</p>'+optHTML(g,'g',r.g);
+  else if(dlgCat==='r')h+='<p class="cathint">Отметьте замечание — поставится оценка 1.</p>'+optHTML(rm,'r',r.r);
+  else h+='<p class="cathint">Нажмите «Грубые ошибки» или «Замечания», чтобы выбрать из списка.</p>';
   $('dlgSub').textContent=sub;
   $('dlgBody').innerHTML=h;
 }
 function openDlg(n){
   cur=n;
+  var sc=S().rows[n].score;dlgCat=sc===0?'g':(sc===1?'r':null);
   $('dlgTitle').textContent=n+'. '+exOf(n).t;
   renderDlg();
   $('dlg').showModal();
+  if(document.activeElement&&document.activeElement.id==='note')document.activeElement.blur(); /* не открывать клавиатуру сразу */
 }
 $('dlgBody').addEventListener('click',function(ev){
+  var cb=ev.target.closest('.cat');
+  if(cb){dlgCat=dlgCat===cb.dataset.cat?null:cb.dataset.cat;var note=$('note')&&$('note').value;renderDlg();return;}
   var b=ev.target.closest('.sp');if(!b)return;
   setScore(cur,+b.dataset.s);upd(cur);save();checkLock();renderDlg();
 });
 $('dlgBody').addEventListener('change',function(ev){
   var cb=ev.target;if(!cb.matches('input[type=checkbox]'))return;
   var r=S().rows[cur],id=cb.dataset.id,key=id.charAt(0)==='g'?'g':'r';
+  var need=key==='g'?0:1,re=false;
+  if(cb.checked&&r.score!==need){setScore(cur,need);re=true;}  /* отметили ошибку — оценка ставится сама */
   r[key]=r[key].filter(function(x){return x!==id;});
   if(cb.checked)r[key].push(id);
-  upd(cur);save();
+  upd(cur);save();checkLock();
+  if(re){var y=$('dlgBody').scrollTop;renderDlg();$('dlgBody').scrollTop=y;}
 });
 $('dlgBody').addEventListener('input',function(ev){
   if(ev.target.id==='note'){S().rows[cur].note=ev.target.value;upd(cur);save();}
@@ -993,7 +1189,8 @@ function loadScript(src){return new Promise(function(ok,no){var s=document.creat
 function ruDate(d){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(d||'');return m?m[3]+'.'+m[2]+'.'+m[1]:'';}
 function verdictOf(st){
   var c=calc(st),bs=c.bs;
-  if(lockedNow(st))return {cls:'fail',t:st.confirmed?'Экзамен остановлен, результат подтверждён':'Экзамен остановлен',s:'Три нуля в упражнениях, кроме узлов.'};
+  var why=lockedNow(st);
+  if(why)return {cls:'fail',t:st.confirmed?'Экзамен остановлен, результат подтверждён':'Экзамен остановлен',s:LOCK_TXT[why].s};
   if(c.done<17)return {cls:'',t:'Заполнено упражнений: '+c.done+' из 17',s:'Итог рассчитывается, когда выставлены все оценки.'};
   if(c.ok)return {cls:'pass',t:'Практическая часть сдана',s:'Набрано '+c.total+' из 34, минимум по каждому блоку выполнен.'};
   var why=[];
@@ -1010,11 +1207,12 @@ function pdfHTML(st){
   h+='<div class="p-who" data-brk><div class="p-photo"'+(st.photo?' style="background-image:url('+st.photo+')"':'')+'>'+(st.photo?'':'нет фото')+'</div><div style="flex:1">';
   h+='<div class="p-fio">'+(esc(st.fio.trim())||'ФИО не указано')+'</div><table class="p-info">'+row('Город',st.city)+row('Дата экзамена',ruDate(st.date))+row('Инструктор группы',st.instr)+row('Экзаменатор',st.exam)+'</table></div></div>';
   h+='<div class="p-res '+v.cls+'" data-brk>'+esc(v.t)+' ('+c.total+' из 34)<small>'+esc(v.s)+'</small></div>';
-  h+='<table class="p-blocks" data-brk>'+BLOCKS.map(function(b){return '<tr><td>'+b.title+'</td><td>минимум '+b.min+'</td><td>'+c.bs[b.id]+' из '+b.max+'</td></tr>';}).join('')+'</table>';
+  h+='<table class="p-blocks" data-brk>'+BLOCKS.map(function(b){return '<tr><td>'+b.title+'</td><td>минимум '+b.min+'</td><td>'+c.bs[b.id]+' из '+b.max+'</td></tr>';}).join('')+
+    (c.notes?'<tr><td>Комментарии инструктора: '+c.notes+'</td><td>каждые '+NOTES_PER_POINT+' — минус 1 балл</td><td>'+(c.pen?'−'+c.pen:'0')+'</td></tr>':'')+'</table>';
   BLOCKS.forEach(function(b){
     h+='<div class="p-blk" data-brk><span>'+b.title+'</span><span>'+c.bs[b.id]+' из '+b.max+'</span></div>';
     h+='<table class="p-tbl"><colgroup><col style="width:26px"><col style="width:190px"><col style="width:56px"><col style="width:56px"><col style="width:210px"><col></colgroup>';
-    h+='<tr data-brk><th>№</th><th>Упражнение</th><th>Оценка</th><th>Время</th><th>Ошибки и замечания</th><th>Комментарий</th></tr>';
+    h+='<tr data-brk><th>№</th><th>Упражнение</th><th>Оценка</th><th>Время</th><th>Ошибки и комментарии</th><th>Комментарий</th></tr>';
     EX.filter(function(e){return e.b===b.id;}).forEach(function(e){
       var r=st.rows[e.n];
       var errs=r.g.map(function(id){return 'Грубая: '+esc(LABEL[id]);}).concat(r.r.map(function(id){return 'Замечание: '+esc(LABEL[id]);})).join('<br>');
@@ -1137,12 +1335,13 @@ function showSent(){
 function safeCell(v){return (typeof v==='string'&&/^[=+\-@]/.test(v))?"'"+v:v;}
 function resultText(st){
   var c=calc(st);
-  return lockedNow(st)?(st.confirmed?'остановлен: 3 нуля, подтверждён':'остановлен: 3 нуля'):(c.done<17?'не заполнено':(c.ok?'сдан':'не сдан'));
+  var why=lockedNow(st);
+  return why?(LOCK_TXT[why].res+(st.confirmed?', подтверждён':'')):(c.done<17?'не заполнено':(c.ok?'сдан':'не сдан'));
 }
 function buildPayload(st){
   return {student:{
     id:st.id,fio:st.fio.trim(),city:normName(st.city),date:st.date,instr:normName(st.instr),exam:normName(st.exam),
-    photo:st.photo||'',result:resultText(st),
+    photo:st.photo||'',result:resultText(st),penalty:calc(st).pen,notes:calc(st).notes,
     rows:EX.map(function(e){
       var r=st.rows[e.n];
       return {n:e.n,t:e.t,time:(e.time&&r.time!=='')?Number(r.time):'',score:r.score===null?'':r.score,
@@ -1218,7 +1417,7 @@ $('jump').addEventListener('click',function(ev){
 $('lockFix').addEventListener('click',openLockDlg);
 $('lockList').addEventListener('click',function(ev){
   var b=ev.target.closest('.pick');if(!b)return;
-  editN=+b.dataset.n;S().confirmed=false;save();$('lockDlg').close();applyLock();summary();
+  editN=+b.dataset.n;S().confirmed=false;S().rows[editN].ok=false;save();upd(editN,true);$('lockDlg').close();applyLock();summary();
   var c=document.querySelector('.ex[data-n="'+editN+'"]');
   c.scrollIntoView({behavior:'smooth',block:'center'});
   c.classList.add('focus');setTimeout(function(){c.classList.remove('focus');},1600);
